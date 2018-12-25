@@ -33,7 +33,7 @@
 class ReactionGrayScott : public ReactionSystem {
 private:
     double f = 0.06;
-    double k = 0.065;
+    double k = 0.0609;
 
 public:
     ReactionGrayScott();
