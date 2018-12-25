@@ -35,13 +35,11 @@
  * @param[in]  _steps   number of frames
  * @param[in]  _tsteps  number of time steps when to write a frame
  */
-TwoDimRD::TwoDimRD(double _Da, double _Db, double _alpha, double _beta,
+TwoDimRD::TwoDimRD(double _Da, double _Db,
                    unsigned int _width, unsigned int _height,
                    double _dx, double _dt, unsigned int _steps, unsigned int _tsteps) :
     Da(_Da),
     Db(_Db),
-    alpha(_alpha),
-    beta(_beta),
     width(_width),
     height(_height),
     dx(_dx),
@@ -130,8 +128,7 @@ void TwoDimRD::update() {
     this->delta_b *= this->Db;
 
     // add reaction term
-    this->add_reaction_a();
-    this->add_reaction_b();
+    this->add_reaction();
 
     // multiply with time step
     this->delta_a *= this->dt;
@@ -201,33 +198,21 @@ void TwoDimRD::laplacian_2d(MatrixXXd& delta_c, MatrixXXd& c) {
 }
 
 /**
- * @brief      Calculate reaction term for compound A
+ * @brief      Calculate reaction term
  *
- * Add the value to the current delta matrix
+ * Add the value to the current delta matrices
  */
-void TwoDimRD::add_reaction_a() {
+void TwoDimRD::add_reaction() {
     #pragma omp parallel for schedule(static)
     for(unsigned int i=0; i<this->height; i++) {
         for(unsigned int j=0; j<this->width; j++) {
             const double a = this->a(i,j);
             const double b = this->b(i,j);
-            this->delta_a(i,j) += a - (a * a * a) - b + this->alpha;
-        }
-    }
-}
-
-/**
- * @brief      Calculate reaction term for compound B
- *
- * Add the value to the current delta matrix
- */
-void TwoDimRD::add_reaction_b() {
-    #pragma omp parallel for schedule(static)
-    for(unsigned int i=0; i<this->height; i++) {
-        for(unsigned int j=0; j<this->width; j++) {
-            const double a = this->a(i,j);
-            const double b = this->b(i,j);
-            this->delta_b(i,j) += (a - b) * this->beta;
+            double ra = 0;
+            double rb = 0;
+            this->reaction_system->reaction(a, b, &ra, &rb);
+            this->delta_a(i,j) += ra;
+            this->delta_b(i,j) += rb;
         }
     }
 }

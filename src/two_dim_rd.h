@@ -28,6 +28,9 @@ typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> MatrixXXd;
 #include <boost/random/normal_distribution.hpp>
 #include <iostream>
 #include <fstream>
+#include <memory>
+
+#include "reaction_system.h"
 
 class TwoDimRD {
 private:
@@ -54,14 +57,14 @@ private:
 
     double t;
 
+    std::unique_ptr<ReactionSystem> reaction_system;
+
 public:
     /**
      * @brief      Constructs the object.
      *
      * @param[in]  _Da      Diffusion coefficient of compound A
      * @param[in]  _Db      Diffusion coefficient of compound B
-     * @param[in]  _alpha   Alpha value in reaction equation
-     * @param[in]  _beta    Beta value in reaction equation
      * @param[in]  _width   width of the system
      * @param[in]  _height  height of the system
      * @param[in]  _dx      size of the space interval
@@ -69,9 +72,13 @@ public:
      * @param[in]  _steps   number of frames
      * @param[in]  _tsteps  number of time steps when to write a frame
      */
-    TwoDimRD(double _Da, double _Db, double _alpha, double _beta,
+    TwoDimRD(double _Da, double _Db,
              unsigned int _width, unsigned int _height,
              double _dx, double _dt, unsigned int _steps, unsigned int _tsteps);
+
+    inline void set_reaction(ReactionSystem* _reaction_system) {
+        this->reaction_system = std::unique_ptr<ReactionSystem>(_reaction_system);
+    }
 
     /**
      * @brief      Perform time integration
@@ -107,18 +114,11 @@ private:
     void laplacian_2d(MatrixXXd& delta_c, MatrixXXd& c);
 
     /**
-     * @brief      Calculate reaction term for compound A
+     * @brief      Calculate reaction term
      *
-     * Add the value to the current delta matrix
+     * Add the value to the current delta matrices
      */
-    void add_reaction_a();
-
-    /**
-     * @brief      Calculate reaction term for compound B
-     *
-     * Add the value to the current delta matrix
-     */
-    void add_reaction_b();
+    void add_reaction();
 
     /**
      * @brief      provide normal distribution

@@ -23,6 +23,7 @@
 
 #include "config.h"
 #include "two_dim_rd.h"
+#include "reaction_fitzhugh_nagumo.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -31,8 +32,6 @@ int main(int argc, char* argv[]) {
         // input filename
         TCLAP::ValueArg<double> arg_da("","Da","Diffusion coefficicient of compound A", true, 1, "double");
         TCLAP::ValueArg<double> arg_db("","Db","Diffusion coefficicient of compound B", true, 100, "double");
-        TCLAP::ValueArg<double> arg_alpha("","alpha","Alpha value in reaction equation", true, -0.005, "double");
-        TCLAP::ValueArg<double> arg_beta("","beta","Beta value in reaction equation", true, 10, "double");
         TCLAP::ValueArg<double> arg_dx("","dx","size of the space interval", true, 1.0, "double");
         TCLAP::ValueArg<double> arg_dt("","dt","size of the time interval", true, 0.001, "double");
         TCLAP::ValueArg<int> arg_width("","width","width of the system", true, 100, "int");
@@ -43,8 +42,6 @@ int main(int argc, char* argv[]) {
 
         cmd.add(arg_da);
         cmd.add(arg_db);
-        cmd.add(arg_alpha);
-        cmd.add(arg_beta);
         cmd.add(arg_dx);
         cmd.add(arg_dt);
         cmd.add(arg_width);
@@ -57,8 +54,6 @@ int main(int argc, char* argv[]) {
 
         const double Da = arg_da.getValue();
         const double Db = arg_db.getValue();
-        const double alpha = arg_alpha.getValue();
-        const double beta = arg_beta.getValue();
 
         const unsigned int width = arg_width.getValue();
         const unsigned int height = arg_height.getValue();
@@ -70,7 +65,8 @@ int main(int argc, char* argv[]) {
         const std::string& outfile = arg_outfile.getValue();
 
         // construct object and perform time-integration
-        TwoDimRD tdrd(Da, Db, alpha, beta, width, height, dx, dt, steps, tsteps);
+        TwoDimRD tdrd(Da, Db, width, height, dx, dt, steps, tsteps);
+        tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionFitzhughNagumo()));
         tdrd.time_integrate();
 
         // write result to file
