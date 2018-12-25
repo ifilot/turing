@@ -108,11 +108,30 @@ void TwoDimRD::write_state_to_file(const std::string& filename) {
  */
 void TwoDimRD::init() {
     // initialize matrices with random values
-    this->a = MatrixXXd::Zero(this->width, this->height).unaryExpr(std::ptr_fun(this->normal_dist));
-    this->b = MatrixXXd::Zero(this->width, this->height).unaryExpr(std::ptr_fun(this->normal_dist));
+    // this->a = MatrixXXd::Zero(this->width, this->height).unaryExpr(std::ptr_fun(this->normal_dist));
+    // this->b = MatrixXXd::Zero(this->width, this->height).unaryExpr(std::ptr_fun(this->normal_dist));
+
+    this->a = MatrixXXd::Ones(this->width, this->height);
+    this->b = MatrixXXd::Zero(this->width, this->height);
+
+    for(unsigned int k=0; k<20; k++) {
+        unsigned int f = this->width / 2 + (unsigned int)((this->uniform_dist()-0.5) * this->width * 0.8);
+        unsigned int g = this->height / 2 + (unsigned int)((this->uniform_dist()-0.5) * this->height * 0.8);
+        double val1 = this->uniform_dist();
+        double val2 = this->uniform_dist();
+        for(unsigned int i=0; i<(unsigned int)((this->uniform_dist() * 0.2 * width)); i++) {
+            for(unsigned int j=0; j<(unsigned int)((this->uniform_dist() * 0.2 * width)); j++) {
+                this->a(f+i, g+j) = val1;
+                this->b(f+i, g+j) = val2;
+            }
+        }
+    }
 
     this->delta_a = MatrixXXd::Zero(this->width, this->height);
     this->delta_b = MatrixXXd::Zero(this->width, this->height);
+
+    this->ta.push_back(this->a);
+    this->tb.push_back(this->b);
 }
 
 /**

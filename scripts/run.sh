@@ -1,4 +1,4 @@
 #!/bin/bash
 
-time ../build/turing --Da 1 --Db 100 --dx 1.0 --dt 0.001 --width 100 --height 100 --steps 150 --tsteps 100 --outfile "data.bin"
+time ../build/turing --Da 2e-5 --Db 1e-5 --dx 0.005 --dt 0.1 --width 256 --height 256 --steps 100 --tsteps 1000 --outfile "data.bin"
 python vis.py

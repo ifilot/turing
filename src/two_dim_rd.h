@@ -24,11 +24,10 @@
 #include <Eigen/Dense>
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> MatrixXXd;
 
-#include <boost/random.hpp>
-#include <boost/random/normal_distribution.hpp>
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <random>
 
 #include "reaction_system.h"
 
@@ -128,9 +127,22 @@ private:
      * @return     returns value at normal distribution
      */
     static double normal_dist(double dummy) {
-        static boost::mt19937 rng;
+        static std::mt19937 rng;
         // center at zero and scale is 0.05
-        static boost::normal_distribution<> nd(0.0, 0.05);
+        static std::normal_distribution<> nd(0.50, 0.50);
+
+        return std::min(1.0, std::max(0.0, nd(rng)));
+    }
+
+    /**
+     * @brief      provide uniform distribution
+     *
+     * @return     returns value at uniform distribution
+     */
+    static double uniform_dist() {
+        static std::mt19937 rng;
+        // center at zero and scale is 0.05
+        static std::uniform_real_distribution<> nd(0.0, 1.0);
 
         return nd(rng);
     }

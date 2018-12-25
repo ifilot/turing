@@ -83,7 +83,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 file(GLOB_RECURSE SOURCES "*.cpp")
 add_executable(turing ${SOURCES})
 
-# Set C++14
+# Set C++17
 add_definitions(-std=c++17)
 
 # Link libraries
