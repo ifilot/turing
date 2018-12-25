@@ -19,17 +19,29 @@
  *                                                                        *
  **************************************************************************/
 
-#include "reaction_fitzhugh_nagumo.h"
+#pragma once
 
-ReactionFitzhughNagumo::ReactionFitzhughNagumo() {
+#include "reaction_system.h"
 
-}
+/**
+ * @brief      Class for Lotka-Volterra Reaction
+ *
+ * Run settings:
+ *        time ../build/turing --Da 2e-5 --Db 1e-5 --dx 0.005 --dt 0.1 --width 256 --height 256 --steps 10 --tsteps 1000 --outfile "data.bin"
+ */
+class ReactionLotkaVolterra : public ReactionSystem {
+private:
+    double alpha = 4.0/3.0;
+    double beta = 8.0/3.0;
+    double gamma = 1;
+    double delta = 1;
 
-void ReactionFitzhughNagumo::init(MatrixXXd& a, MatrixXXd& b) const {
+public:
+    ReactionLotkaVolterra();
 
-}
+    void reaction(double a, double b, double *ra, double *rb) const;
 
-void ReactionFitzhughNagumo::reaction(double a, double b, double *ra, double *rb) const {
-    *ra = a - (a * a * a) - b + this->alpha;
-    *rb = (a - b) * this->beta;
-}
+    void init(MatrixXXd& a, MatrixXXd& b) const;
+
+private:
+};

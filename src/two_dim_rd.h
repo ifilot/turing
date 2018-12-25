@@ -27,7 +27,6 @@ typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> MatrixXXd;
 #include <iostream>
 #include <fstream>
 #include <memory>
-#include <random>
 
 #include "reaction_system.h"
 
@@ -75,9 +74,7 @@ public:
              unsigned int _width, unsigned int _height,
              double _dx, double _dt, unsigned int _steps, unsigned int _tsteps);
 
-    inline void set_reaction(ReactionSystem* _reaction_system) {
-        this->reaction_system = std::unique_ptr<ReactionSystem>(_reaction_system);
-    }
+    void set_reaction(ReactionSystem* _reaction_system);
 
     /**
      * @brief      Perform time integration
@@ -118,33 +115,5 @@ private:
      * Add the value to the current delta matrices
      */
     void add_reaction();
-
-    /**
-     * @brief      provide normal distribution
-     *
-     * @param[in]  dummy  A dummy variable, does nothing but required for function pointer
-     *
-     * @return     returns value at normal distribution
-     */
-    static double normal_dist(double dummy) {
-        static std::mt19937 rng;
-        // center at zero and scale is 0.05
-        static std::normal_distribution<> nd(0.50, 0.50);
-
-        return std::min(1.0, std::max(0.0, nd(rng)));
-    }
-
-    /**
-     * @brief      provide uniform distribution
-     *
-     * @return     returns value at uniform distribution
-     */
-    static double uniform_dist() {
-        static std::mt19937 rng;
-        // center at zero and scale is 0.05
-        static std::uniform_real_distribution<> nd(0.0, 1.0);
-
-        return nd(rng);
-    }
 
 };

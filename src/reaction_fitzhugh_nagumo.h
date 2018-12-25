@@ -31,6 +31,8 @@ private:
 public:
     ReactionFitzhughNagumo();
 
+    void init(MatrixXXd& a, MatrixXXd& b) const;
+
     void reaction(double a, double b, double *ra, double *rb) const;
 
 private:

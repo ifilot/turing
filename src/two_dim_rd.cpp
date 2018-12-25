@@ -47,7 +47,10 @@ TwoDimRD::TwoDimRD(double _Da, double _Db,
     steps(_steps),
     tsteps(_tsteps) {
 
-    // do some stuff
+}
+
+void TwoDimRD::set_reaction(ReactionSystem* _reaction_system) {
+    this->reaction_system = std::unique_ptr<ReactionSystem>(_reaction_system);
     this->init();
 }
 
@@ -108,26 +111,10 @@ void TwoDimRD::write_state_to_file(const std::string& filename) {
  */
 void TwoDimRD::init() {
     // initialize matrices with random values
-    // this->a = MatrixXXd::Zero(this->width, this->height).unaryExpr(std::ptr_fun(this->normal_dist));
-    // this->b = MatrixXXd::Zero(this->width, this->height).unaryExpr(std::ptr_fun(this->normal_dist));
+    this->a = MatrixXXd::Zero(this->width, this->height);
+    this->b = MatrixXXd::Zero(this->width, this->height);
 
-    this->a = MatrixXXd::Ones(this->width, this->height) * 0.4201;
-    this->b = MatrixXXd::Ones(this->width, this->height) * 0.2878;
-
-    for(unsigned int k=0; k<100; k++) {
-        int f = this->width / 2 + (int)((this->uniform_dist()-0.5) * this->width * 0.9);
-        int g = this->height / 2 + (int)((this->uniform_dist()-0.5) * this->height * 0.9);
-        double val1 = this->uniform_dist();
-        double val2 = this->uniform_dist();
-        const int imax = (unsigned int)((this->uniform_dist() * 0.10 * width));
-        const int jmax = (unsigned int)((this->uniform_dist() * 0.10 * width));
-        for(int i=-imax/2; i<imax/2; i++) {
-            for(int j=-jmax/2; j<jmax/2; j++) {
-                this->a(f+i, g+j) = val1;
-                this->b(f+i, g+j) = val2;
-            }
-        }
-    }
+    this->reaction_system->init(this->a, this->b);
 
     this->delta_a = MatrixXXd::Zero(this->width, this->height);
     this->delta_b = MatrixXXd::Zero(this->width, this->height);

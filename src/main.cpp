@@ -25,6 +25,7 @@
 #include "two_dim_rd.h"
 #include "reaction_fitzhugh_nagumo.h"
 #include "reaction_gray_scott.h"
+#include "reaction_lotka_volterra.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -67,7 +68,7 @@ int main(int argc, char* argv[]) {
 
         // construct object and perform time-integration
         TwoDimRD tdrd(Da, Db, width, height, dx, dt, steps, tsteps);
-        tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionGrayScott()));
+        tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionLotkaVolterra()));
         tdrd.time_integrate();
 
         // write result to file

@@ -25,6 +25,9 @@ ReactionGiererMeinhardt::ReactionGiererMeinhardt() {
 
 }
 
+void ReactionGiererMeinhardt::init(MatrixXXd& a, MatrixXXd& b) const {
+
+}
 
 void ReactionGiererMeinhardt::reaction(double a, double b, double *ra, double *rb) const {
 }

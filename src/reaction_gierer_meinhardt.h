@@ -30,6 +30,8 @@ private:
 public:
     ReactionGiererMeinhardt();
 
+    void init(MatrixXXd& a, MatrixXXd& b) const;
+
     void reaction(double a, double b, double *ra, double *rb) const;
 
 private:

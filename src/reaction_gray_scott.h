@@ -29,6 +29,9 @@
  * See: * https://arxiv.org/pdf/1501.01990.pdf
  *      * http://www.theshapeofmath.com/princeton/dynsys/turinginst3
  *      * http://mrob.com/pub/comp/xmorphia/uskate-world.html
+ *
+ * Run settings:
+ *        time ../build/turing --Da 2e-5 --Db 1e-5 --dx 0.005 --dt 0.1 --width 256 --height 256 --steps 10 --tsteps 1000 --outfile "data.bin"
  */
 class ReactionGrayScott : public ReactionSystem {
 private:
@@ -39,6 +42,8 @@ public:
     ReactionGrayScott();
 
     void reaction(double a, double b, double *ra, double *rb) const;
+
+    void init(MatrixXXd& a, MatrixXXd& b) const;
 
 private:
 };
