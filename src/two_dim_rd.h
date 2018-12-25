@@ -1,0 +1,138 @@
+/**************************************************************************
+ *   This file is part of TURING.                                         *
+ *                                                                        *
+ *   Author: Ivo Filot <ivo@ivofilot.nl>                                  *
+ *                                                                        *
+ *   TURING is free software:                                             *
+ *   you can redistribute it and/or modify it under the terms of the      *
+ *   GNU General Public License as published by the Free Software         *
+ *   Foundation, either version 3 of the License, or (at your option)     *
+ *   any later version.                                                   *
+ *                                                                        *
+ *   TURING is distributed in the hope that it will be useful,            *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty          *
+ *   of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.              *
+ *   See the GNU General Public License for more details.                 *
+ *                                                                        *
+ *   You should have received a copy of the GNU General Public License    *
+ *   along with this program.  If not, see http://www.gnu.org/licenses/.  *
+ *                                                                        *
+ **************************************************************************/
+
+#pragma once
+
+#include <Eigen/Dense>
+typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> MatrixXXd;
+
+#include <boost/random.hpp>
+#include <boost/random/normal_distribution.hpp>
+#include <iostream>
+#include <fstream>
+
+class TwoDimRD {
+private:
+    double Da;              //!< Diffusion coefficient of compound A
+    double Db;              //!< Diffusion coefficient of compound B
+
+    double alpha;           //!< Alpha value in reaction equation
+    double beta;            //!< Beta value in reaction equation
+
+    unsigned int width;     //!< width of the system
+    unsigned int height;    //!< height of the system
+    double dx;              //!< size of the space interval
+    double dt;              //!< size of the time interval
+    unsigned int steps;     //!< number of frames
+    unsigned int tsteps;    //!< number of time steps when to write a frame
+
+    MatrixXXd a;            //!< matrix to hold concentration of A
+    MatrixXXd b;            //!< matrix to hold concentration of B
+    MatrixXXd delta_a;      //!< matrix to store temporary A increment
+    MatrixXXd delta_b;      //!< matrix to store temporary B increment
+
+    std::vector<MatrixXXd> ta;  //!< matrix to hold temporal data
+    std::vector<MatrixXXd> tb;  //!< matrix to hold temporal data
+
+    double t;
+
+public:
+    /**
+     * @brief      Constructs the object.
+     *
+     * @param[in]  _Da      Diffusion coefficient of compound A
+     * @param[in]  _Db      Diffusion coefficient of compound B
+     * @param[in]  _alpha   Alpha value in reaction equation
+     * @param[in]  _beta    Beta value in reaction equation
+     * @param[in]  _width   width of the system
+     * @param[in]  _height  height of the system
+     * @param[in]  _dx      size of the space interval
+     * @param[in]  _dt      size of the time interval
+     * @param[in]  _steps   number of frames
+     * @param[in]  _tsteps  number of time steps when to write a frame
+     */
+    TwoDimRD(double _Da, double _Db, double _alpha, double _beta,
+             unsigned int _width, unsigned int _height,
+             double _dx, double _dt, unsigned int _steps, unsigned int _tsteps);
+
+    /**
+     * @brief      Perform time integration
+     */
+    void time_integrate();
+
+    /**
+     * @brief      Write the current state of compound A to the file
+     *
+     * @param[in]  filename  The filename
+     */
+    void write_state_to_file(const std::string& filename);
+
+private:
+    /**
+     * @brief      Initialize the system
+     */
+    void init();
+
+    /**
+     * @brief      Perform a time-step
+     */
+    void update();
+
+    /**
+     * @brief      Calculate Laplacian using central finite difference
+     *
+     * @param      delta_c  Concentration update matrix
+     * @param      c        Current concentration matrix
+     *
+     * Note that this overwrites the current delta matrices!
+     */
+    void laplacian_2d(MatrixXXd& delta_c, MatrixXXd& c);
+
+    /**
+     * @brief      Calculate reaction term for compound A
+     *
+     * Add the value to the current delta matrix
+     */
+    void add_reaction_a();
+
+    /**
+     * @brief      Calculate reaction term for compound B
+     *
+     * Add the value to the current delta matrix
+     */
+    void add_reaction_b();
+
+    /**
+     * @brief      provide normal distribution
+     *
+     * @param[in]  dummy  A dummy variable, does nothing but required for function pointer
+     *
+     * @return     returns value at normal distribution
+     */
+    static double normal_dist(double dummy) {
+        static boost::mt19937 rng;
+        // center at zero and scale is 0.05
+        static boost::normal_distribution<> nd(0.0, 0.05);
+
+        return nd(rng);
+    }
+
+};
