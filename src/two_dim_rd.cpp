@@ -115,12 +115,14 @@ void TwoDimRD::init() {
     this->b = MatrixXXd::Zero(this->width, this->height);
 
     for(unsigned int k=0; k<20; k++) {
-        unsigned int f = this->width / 2 + (unsigned int)((this->uniform_dist()-0.5) * this->width * 0.8);
-        unsigned int g = this->height / 2 + (unsigned int)((this->uniform_dist()-0.5) * this->height * 0.8);
+        int f = this->width / 2 + (int)((this->uniform_dist()-0.5) * this->width * 0.7);
+        int g = this->height / 2 + (int)((this->uniform_dist()-0.5) * this->height * 0.7);
         double val1 = this->uniform_dist();
         double val2 = this->uniform_dist();
-        for(unsigned int i=0; i<(unsigned int)((this->uniform_dist() * 0.2 * width)); i++) {
-            for(unsigned int j=0; j<(unsigned int)((this->uniform_dist() * 0.2 * width)); j++) {
+        const int imax = (unsigned int)((this->uniform_dist() * 0.25 * width));
+        const int jmax = (unsigned int)((this->uniform_dist() * 0.25 * width));
+        for(int i=-imax/2; i<imax/2; i++) {
+            for(int j=-jmax/2; j<jmax/2; j++) {
                 this->a(f+i, g+j) = val1;
                 this->b(f+i, g+j) = val2;
             }

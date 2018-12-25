@@ -87,8 +87,8 @@ add_executable(turing ${SOURCES})
 add_definitions(-std=c++17)
 
 # Link libraries
-SET(CMAKE_EXE_LINKER_FLAGS "-Wl,-rpath=\$ORIGIN/lib")
-target_link_libraries(turing ${Boost_LIBRARIES} ${CAIRO_LIBRARIES})
+#SET(CMAKE_EXE_LINKER_FLAGS "-Wl,-rpath=\$ORIGIN/lib")
+target_link_libraries(turing ${Boost_LIBRARIES})
 
 # add Wno-literal-suffix to suppress warning messages
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS}")

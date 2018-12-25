@@ -21,8 +21,8 @@ with open("data.bin", "rb") as f:
         ap = a.reshape((height, width))
         bp = b.reshape((height, width))
 
-        plt.figure()
-        im = plt.imshow(ap, origin='lower', interpolation='bicubic', vmin=0, vmax=1)
+        plt.figure(dpi=240)
+        im = plt.imshow(ap, origin='lower', interpolation='nearest', vmin=0, vmax=1)
         plt.colorbar(im)
         plt.title('%04i' % i)
         filename = '%04i.png' % i
