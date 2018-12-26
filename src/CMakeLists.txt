@@ -40,15 +40,8 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
-# add OS specific
-if(APPLE)
-    add_definitions(-D_APPLE)
-    SET(BOOST_INCLUDEDIR "/usr/local/include")
-    SET(BOOST_LIBRARYDIR "/usr/local/lib")
-else()
-    SET(BOOST_INCLUDEDIR "/usr/include")
-    SET(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")
-endif()
+SET(BOOST_INCLUDEDIR "/usr/include")
+SET(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")
 
 find_package(OpenMP)
 if (OPENMP_FOUND)
@@ -85,13 +78,4 @@ add_executable(turing ${SOURCES})
 add_definitions(-std=c++17)
 
 # Link libraries
-#SET(CMAKE_EXE_LINKER_FLAGS "-Wl,-rpath=\$ORIGIN/lib")
 target_link_libraries(turing ${Boost_LIBRARIES})
-
-# add Wno-literal-suffix to suppress warning messages
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS}")
-
-###
-# Installing
-##
-install (TARGETS turing DESTINATION bin)
