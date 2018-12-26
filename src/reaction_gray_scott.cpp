@@ -43,5 +43,26 @@ void ReactionGrayScott::init(MatrixXXd& a, MatrixXXd& b) const {
  * @param[in]  params  The parameters
  */
 void ReactionGrayScott::set_parameters(const std::string& params) {
+    auto map = this->parse_parameters(params);
 
+    auto got = map.find("k");
+    if(got != map.end()) {
+        this->k = got->second;
+    } else {
+        throw std::runtime_error("Cannot find parameter k");
+    }
+
+    got = map.find("f");
+    if(got != map.end()) {
+        this->f = got->second;
+    } else {
+        throw std::runtime_error("Cannot find parameter f");
+    }
+
+    std::vector<std::string> paramlist = {"k", "f"};
+    std::cout << "Succesfully loaded the following parameters" << std::endl;
+    for(const std::string& variable : paramlist) {
+        auto got = map.find(variable);
+        std::cout << "    " << variable << " = " << got->second << std::endl;
+    }
 }

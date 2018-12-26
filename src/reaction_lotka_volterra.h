@@ -25,9 +25,6 @@
 
 /**
  * @brief      Class for Lotka-Volterra Reaction
- *
- * Run settings:
- *        time ../build/turing --Da 2e-5 --Db 1e-5 --dx 0.005 --dt 0.1 --width 256 --height 256 --steps 10 --tsteps 1000 --outfile "data.bin"
  */
 class ReactionLotkaVolterra : public ReactionSystem {
 private:
