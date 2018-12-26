@@ -31,13 +31,48 @@ class ReactionSystem {
 private:
 
 public:
+    /**
+     * @brief      Constructs the object.
+     */
     ReactionSystem();
 
+    /**
+     * @brief      Perform a reaction step
+     *
+     * @param[in]  a     Concentration matrix A
+     * @param[in]  b     Concentration matrix B
+     * @param      ra    Pointer to reaction term for A
+     * @param      rb    Pointer to reaction term for B
+     */
     virtual void reaction(double a, double b, double *ra, double *rb) const = 0;
 
+    /**
+     * @brief      Initialize the system
+     *
+     * @param      a     Concentration matrix A
+     * @param      b     Concentration matrix B
+     */
     virtual void init(MatrixXXd& a, MatrixXXd& b) const = 0;
 
 protected:
+    /**
+     * @brief      Make a single sphere in the center of the system
+     *
+     * @param      a     Concentration matrix A
+     * @param      b     Concentration matrix B
+     * @param[in]  ca    concentration of A in center
+     * @param[in]  cb    concentration of B in center
+     */
+    void init_central_circle(MatrixXXd& a, MatrixXXd& b, double ca, double cb) const;
+
+    /**
+     * @brief      Set random rectangles as initial value
+     *
+     * @param      a     Concentration matrix A
+     * @param      b     Concentration matrix B
+     */
+    void init_random_rectangles(MatrixXXd& a, MatrixXXd& b) const;
+
     /**
      * @brief      provide normal distribution
      *

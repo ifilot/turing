@@ -21,36 +21,32 @@
 
 #include "reaction_lotka_volterra.h"
 
+/**
+ * @brief      Constructs the object.
+ */
 ReactionLotkaVolterra::ReactionLotkaVolterra() {
 
 }
 
-
+/**
+ * @brief      Perform a reaction step
+ *
+ * @param[in]  a     Concentration matrix A
+ * @param[in]  b     Concentration matrix B
+ * @param      ra    Pointer to reaction term for A
+ * @param      rb    Pointer to reaction term for B
+ */
 void ReactionLotkaVolterra::reaction(double a, double b, double *ra, double *rb) const {
     *ra = this->alpha * a - this->beta * a * b;
     *rb = this->delta * a * b - this->gamma * b;
 }
 
-
+/**
+ * @brief      Initialize the system
+ *
+ * @param      a     Concentration matrix A
+ * @param      b     Concentration matrix B
+ */
 void ReactionLotkaVolterra::init(MatrixXXd& a, MatrixXXd& b) const {
-    unsigned int width = a.cols();
-    unsigned int height = a.rows();
-
-    a = MatrixXXd::Ones(height, width) * 0.4201;
-    b = MatrixXXd::Ones(height, width) * 0.2878;
-
-    for(unsigned int k=0; k<100; k++) {
-        int f = height / 2 + (int)((this->uniform_dist()-0.5) * height * 0.90);
-        int g = width / 2 + (int)((this->uniform_dist()-0.5) * width * 0.90);
-        double val1 = this->uniform_dist();
-        double val2 = this->uniform_dist();
-        const int imax = (unsigned int)((this->uniform_dist() * 0.1 * height));
-        const int jmax = (unsigned int)((this->uniform_dist() * 0.1 * height));
-        for(int i=-imax/2; i<imax/2; i++) {
-            for(int j=-jmax/2; j<jmax/2; j++) {
-                a(f+i, g+j) = val1;
-                b(f+i, g+j) = val2;
-            }
-        }
-    }
+    this->init_random_rectangles(a, b);
 }

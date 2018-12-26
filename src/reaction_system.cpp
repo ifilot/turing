@@ -21,6 +21,67 @@
 
 #include "reaction_system.h"
 
+/**
+ * @brief      Constructs the object.
+ */
 ReactionSystem::ReactionSystem() {
 
+}
+
+/**
+ * @brief      Make a single sphere in the center of the system
+ *
+ * @param      a     Concentration matrix A
+ * @param      b     Concentration matrix B
+ * @param[in]  ca    concentration of A in center
+ * @param[in]  cb    concentration of B in center
+ */
+void ReactionSystem::init_central_circle(MatrixXXd& a, MatrixXXd& b, double ca, double cb) const {
+    unsigned int width = a.cols();
+    unsigned int height = a.rows();
+
+    a = MatrixXXd::Zero(height, width);
+    b = MatrixXXd::Zero(height, width);
+
+    for(unsigned int i=0; i<height; i++) {
+        for(unsigned int j=0; j<width; j++) {
+            double r = (double)width / 8.0;
+            double r2 = r * r;
+            double dx = (double)(width) / 2.0 - (double)j;
+            double dy = (double)(height) / 2.0 - (double)i;
+            if( (dx * dx + dy * dy) < r2) {
+                a(i,j) = ca;
+                b(i,j) = cb;
+            }
+        }
+    }
+}
+
+/**
+ * @brief      Set random rectangles as initial value
+ *
+ * @param      a     Concentration matrix A
+ * @param      b     Concentration matrix B
+ */
+void ReactionSystem::init_random_rectangles(MatrixXXd& a, MatrixXXd& b) const {
+    unsigned int width = a.cols();
+    unsigned int height = a.rows();
+
+    a = MatrixXXd::Ones(height, width) * 0.4201;
+    b = MatrixXXd::Ones(height, width) * 0.2878;
+
+    for(unsigned int k=0; k<100; k++) {
+        int f = height / 2 + (int)((this->uniform_dist()-0.5) * height * 0.90);
+        int g = width / 2 + (int)((this->uniform_dist()-0.5) * width * 0.90);
+        double val1 = this->uniform_dist();
+        double val2 = this->uniform_dist();
+        const int imax = (unsigned int)((this->uniform_dist() * 0.1 * height));
+        const int jmax = (unsigned int)((this->uniform_dist() * 0.1 * height));
+        for(int i=-imax/2; i<imax/2; i++) {
+            for(int j=-jmax/2; j<jmax/2; j++) {
+                a(f+i, g+j) = val1;
+                b(f+i, g+j) = val2;
+            }
+        }
+    }
 }
