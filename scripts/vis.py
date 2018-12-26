@@ -9,8 +9,6 @@ with open("data.bin", "rb") as f:
     height = struct.unpack('i', f.read(4))[0]
     steps = struct.unpack('i', f.read(4))[0]
 
-    print(width, height, steps)
-
     for i in range(0, steps+1):
         a = np.fromfile(f, dtype=np.dtype('d'), count=width * height)
         b = np.fromfile(f, dtype=np.dtype('d'), count=width * height)
