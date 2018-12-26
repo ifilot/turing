@@ -10,7 +10,7 @@
 --parameters "alpha=2.3333;beta=2.6666;gamma=1.0;delta=1.0"
 
 # Execute Python script to generate graphs
-python vis.py
+python vis.py data.bin 0.0 1.0 0.0 1.0
 
 # create a gif file from the series of png files
 convert {0080..0100}.png -resize 25% -loop 0 lotka-volterra.gif

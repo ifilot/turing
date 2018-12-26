@@ -29,6 +29,27 @@ ReactionSystem::ReactionSystem() {
 }
 
 /**
+ * @brief      random initialization
+ *
+ * @param      a     Concentration matrix A
+ * @param      b     Concentration matrix B
+ */
+void ReactionSystem::init_random(MatrixXXd& a, MatrixXXd& b) const {
+    unsigned int width = a.cols();
+    unsigned int height = a.rows();
+
+    a = MatrixXXd::Zero(height, width);
+    b = MatrixXXd::Zero(height, width);
+
+    for(unsigned int i=0; i<height; i++) {
+        for(unsigned int j=0; j<width; j++) {
+            a(i,j) = this->uniform_dist();
+            b(i,j) = this->uniform_dist();
+        }
+    }
+}
+
+/**
  * @brief      Make a single sphere in the center of the system
  *
  * @param      a     Concentration matrix A

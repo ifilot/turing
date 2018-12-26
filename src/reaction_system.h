@@ -69,6 +69,14 @@ public:
 
 protected:
     /**
+     * @brief      random initialization
+     *
+     * @param      a     Concentration matrix A
+     * @param      b     Concentration matrix B
+     */
+    void init_random(MatrixXXd& a, MatrixXXd& b) const;
+
+    /**
      * @brief      Make a single sphere in the center of the system
      *
      * @param      a     Concentration matrix A

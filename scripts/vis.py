@@ -3,8 +3,15 @@
 import struct
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
-with open("data.bin", "rb") as f:
+# set boundaries for cmap
+vmin1 = sys.argv[2]
+vmax1 = sys.argv[3]
+vmin2 = sys.argv[4]
+vmax2 = sys.argv[5]
+
+with open(sys.argv[1], "rb") as f:
     width = struct.unpack('i', f.read(4))[0]
     height = struct.unpack('i', f.read(4))[0]
     steps = struct.unpack('i', f.read(4))[0]
@@ -13,19 +20,16 @@ with open("data.bin", "rb") as f:
         a = np.fromfile(f, dtype=np.dtype('d'), count=width * height)
         b = np.fromfile(f, dtype=np.dtype('d'), count=width * height)
 
-        # if i < steps - 1:
-        #     continue
-
         ap = a.reshape((height, width))
         bp = b.reshape((height, width))
 
-	fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
 
-        im1 = ax1.imshow(ap, origin='lower', interpolation='bicubic', vmin=0, vmax=1)
-	plt.colorbar(im1, ax=ax1)
+        im1 = ax1.imshow(ap, origin='lower', interpolation='bicubic', vmin=vmin1, vmax=vmax1)
+        plt.colorbar(im1, ax=ax1)
 
-        im2 = ax2.imshow(bp, origin='lower', interpolation='bicubic', vmin=0, vmax=1, cmap='PiYG')
-	plt.colorbar(im2, ax=ax2)
+        im2 = ax2.imshow(bp, origin='lower', interpolation='bicubic', vmin=vmin2, vmax=vmax2, cmap='PiYG')
+        plt.colorbar(im2, ax=ax2)
 
         ax1.set_title('Concentration A')
         ax2.set_title('Concentration B')

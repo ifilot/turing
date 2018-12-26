@@ -38,7 +38,7 @@ Choose between:
 * `fitzhugh-nagumo`
 
 ### Lotka-Volterra
-Default parameter string:
+Example execution:
 ```
 ../build/turing --Da 2e-5 --Db 1e-5 --dx 0.005 --dt 0.01 --width 256 --height 256 \
 --steps 100 --tsteps 100 --outfile "data.bin" --reaction lotka-volterra \
@@ -47,18 +47,31 @@ Default parameter string:
 
 ![Lotka-Volterra reaction-diffusion system](img/lotka-volterra.gif "Lotka-Volterra reaction-diffusion system")
 
-### Gierer-Meinhardt
+### Fitzhugh-Nagumo
+Example execution:
+```
+../build/turing --Da 1 --Db 100 --dx 1.0 --dt 0.001 --width 100 --height 100 \
+--steps 20 --tsteps 1000 --outfile "data.bin" --reaction fitzhugh-nagumo \
+--parameters "alpha=-0.005;beta=10.0"
+```
+
+Fitzhugh-Nagumo converges to a **steady-state solution**.
+
+![Fitzhugh-Nagumo reaction-diffusion system](img/fitzhugh-nagumo.gif "Fitzhugh-Nagumo reaction-diffusion system")
 
 ### Gray-Scott
-
+Example execution:
 ```
 ../build/turing --Da 2e-5 --Db 1e-5 --dx 0.005 --dt 0.1 --width 256 --height 256 \
 --steps 20 --tsteps 1000 --outfile "data.bin" --reaction gray-scott \
 --parameters "f=0.06;k=0.0609"
 ```
+
+Gray-Scott converges to a **steady-state solution**.
+
 ![Gray-Scott reaction-diffusion system](img/gray-scott.gif "Gray-Scott reaction-diffusion system")
 
-### Fitzhugh-Nagumo
+### Gierer-Meinhardt
 
 ## Compilation
 ```

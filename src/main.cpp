@@ -98,10 +98,11 @@ int main(int argc, char* argv[]) {
             tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionFitzhughNagumo()));
         } else {
             std::cout << "Invalid reaction encountered, please choose one among the following:" << std::endl;
-            std::cout << "    Gierer-Meinhardt" << std::endl;
-            std::cout << "    Lotka-Volterra" << std::endl;
-            std::cout << "    Gray-Scott" << std::endl;
-            std::cout << "    Fitzhugh-Nagumo" << std::endl;
+            std::cout << "    gierer-meinhardt" << std::endl;
+            std::cout << "    lotka-volterra" << std::endl;
+            std::cout << "    gray-scott" << std::endl;
+            std::cout << "    fitzhugh-nagumo" << std::endl;
+            std::cout << "Note that the input is case-sensitive." << std::endl;
         }
 
         // set parameters
