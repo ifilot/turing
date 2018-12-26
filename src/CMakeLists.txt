@@ -69,14 +69,12 @@ find_package(PkgConfig REQUIRED)
 find_package(Boost REQUIRED)
 pkg_check_modules(TCLAP tclap REQUIRED)
 pkg_check_modules(EIGEN eigen3 REQUIRED)
-pkg_check_modules(CAIRO cairo REQUIRED)
 
 # Set include folders
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${CMAKE_BINARY_DIR}
                     ${TCLAP_INCLUDE_DIRS}
                     ${EIGEN_INCLUDE_DIRS}
-                    ${CAIRO_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIR})
 
 # Add sources
