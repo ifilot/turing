@@ -1,5 +1,7 @@
 # Turing
 
+![Lotka-Volterra reaction-diffusion system](img/lotka-volterra.jpg "Lotka-Volterra reaction-diffusion system")
+
 ## Purpose
 Perform a reaction-diffusion simulation to produce Turing patterns.
 

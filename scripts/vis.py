@@ -21,11 +21,17 @@ with open("data.bin", "rb") as f:
         ap = a.reshape((height, width))
         bp = b.reshape((height, width))
 
-        plt.figure(dpi=240)
-        im = plt.imshow(ap, origin='lower', interpolation='nearest', vmin=0, vmax=1)
-        plt.colorbar(im)
-        plt.title('%04i' % i)
+	fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
+
+        im1 = ax1.imshow(ap, origin='lower', interpolation='bicubic', vmin=0, vmax=1)
+	plt.colorbar(im1, ax=ax1)
+
+        im2 = ax2.imshow(bp, origin='lower', interpolation='bicubic', vmin=0, vmax=1, cmap='PiYG')
+	plt.colorbar(im2, ax=ax2)
+
+        ax1.set_title('Concentration A')
+        ax2.set_title('Concentration B')
         filename = '%04i.png' % i
         print("Writing image: %s" % filename)
-        plt.savefig(filename)
+        plt.savefig(filename, dpi=300)
         plt.close()

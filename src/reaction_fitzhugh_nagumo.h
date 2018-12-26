@@ -23,6 +23,11 @@
 
 #include "reaction_system.h"
 
+/**
+ * @brief      Class for Fitzhugh-Nagumo Reaction
+ *
+ * See: http://www.degeneratestate.org/posts/2017/May/05/turing-patterns/
+ */
 class ReactionFitzhughNagumo : public ReactionSystem {
 private:
     double alpha = -0.005;
