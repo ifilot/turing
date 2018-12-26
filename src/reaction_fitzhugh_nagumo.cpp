@@ -33,3 +33,12 @@ void ReactionFitzhughNagumo::reaction(double a, double b, double *ra, double *rb
     *ra = a - (a * a * a) - b + this->alpha;
     *rb = (a - b) * this->beta;
 }
+
+/**
+ * @brief      Sets the parameters.
+ *
+ * @param[in]  params  The parameters
+ */
+void ReactionFitzhughNagumo::set_parameters(const std::string& params) {
+
+}

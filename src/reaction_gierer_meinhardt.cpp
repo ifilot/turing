@@ -31,3 +31,12 @@ void ReactionGiererMeinhardt::init(MatrixXXd& a, MatrixXXd& b) const {
 
 void ReactionGiererMeinhardt::reaction(double a, double b, double *ra, double *rb) const {
 }
+
+/**
+ * @brief      Sets the parameters.
+ *
+ * @param[in]  params  The parameters
+ */
+void ReactionGiererMeinhardt::set_parameters(const std::string& params) {
+
+}

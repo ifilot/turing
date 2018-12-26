@@ -36,3 +36,12 @@ void ReactionGrayScott::reaction(double a, double b, double *ra, double *rb) con
 void ReactionGrayScott::init(MatrixXXd& a, MatrixXXd& b) const {
     this->init_random_rectangles(a, b);
 }
+
+/**
+ * @brief      Sets the parameters.
+ *
+ * @param[in]  params  The parameters
+ */
+void ReactionGrayScott::set_parameters(const std::string& params) {
+
+}

@@ -26,6 +26,12 @@ typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> MatrixXXd;
 
 #include <random>
 #include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <string>
+
+#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 
 class ReactionSystem {
 private:
@@ -53,6 +59,13 @@ public:
      * @param      b     Concentration matrix B
      */
     virtual void init(MatrixXXd& a, MatrixXXd& b) const = 0;
+
+    /**
+     * @brief      Sets the parameters.
+     *
+     * @param[in]  params  The parameters
+     */
+    virtual void set_parameters(const std::string& params) = 0;
 
 protected:
     /**
@@ -100,4 +113,13 @@ protected:
 
         return nd(rng);
     }
+
+    /**
+     * @brief      Parse parameters
+     *
+     * @param[in]  params  string containing list of parameters
+     *
+     * @return     unordered map with the parameters
+     */
+    std::unordered_map<std::string, double> parse_parameters(const std::string& params) const;
 };

@@ -85,3 +85,31 @@ void ReactionSystem::init_random_rectangles(MatrixXXd& a, MatrixXXd& b) const {
         }
     }
 }
+
+/**
+ * @brief      Parse parameters
+ *
+ * @param[in]  params  string containing list of parameters
+ *
+ * @return     unordered map with the parameters
+ */
+std::unordered_map<std::string, double> ReactionSystem::parse_parameters(const std::string& params) const {
+    std::vector<std::string> pieces;
+    boost::split(pieces, params, boost::is_any_of(";"), boost::token_compress_on);
+
+    std::unordered_map<std::string, double> map;
+
+    for(const std::string& piece : pieces) {
+        std::vector<std::string> vars;
+        boost::split(vars, piece, boost::is_any_of("="), boost::token_compress_on);
+        if(vars.size() != 2) {
+            std::cerr << "Piece: " << piece << std::endl;
+            std::cerr << "Var size: " << vars.size() << std::endl;
+            throw std::runtime_error("Invalid params list encountered: " + params);
+        }
+
+        map.emplace(vars[0], boost::lexical_cast<double>(vars[1]));
+    }
+
+    return map;
+}

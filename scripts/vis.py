@@ -31,5 +31,5 @@ with open("data.bin", "rb") as f:
         ax2.set_title('Concentration B')
         filename = '%04i.png' % i
         print("Writing image: %s" % filename)
-        plt.savefig(filename, dpi=300)
+        plt.savefig(filename, dpi=72)
         plt.close()

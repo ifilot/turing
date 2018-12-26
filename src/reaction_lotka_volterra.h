@@ -60,5 +60,12 @@ public:
      */
     void init(MatrixXXd& a, MatrixXXd& b) const;
 
+    /**
+     * @brief      Sets the parameters.
+     *
+     * @param[in]  params  The parameters
+     */
+    void set_parameters(const std::string& params);
+
 private:
 };

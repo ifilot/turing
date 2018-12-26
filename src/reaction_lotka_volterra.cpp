@@ -50,3 +50,47 @@ void ReactionLotkaVolterra::reaction(double a, double b, double *ra, double *rb)
 void ReactionLotkaVolterra::init(MatrixXXd& a, MatrixXXd& b) const {
     this->init_random_rectangles(a, b);
 }
+
+/**
+ * @brief      Sets the parameters.
+ *
+ * @param[in]  params  The parameters
+ */
+void ReactionLotkaVolterra::set_parameters(const std::string& params) {
+    auto map = this->parse_parameters(params);
+
+    auto got = map.find("alpha");
+    if(got != map.end()) {
+        this->alpha = got->second;
+    } else {
+        throw std::runtime_error("Cannot find parameter alpha");
+    }
+
+    got = map.find("beta");
+    if(got != map.end()) {
+        this->beta = got->second;
+    } else {
+        throw std::runtime_error("Cannot find parameter beta");
+    }
+
+    got = map.find("gamma");
+    if(got != map.end()) {
+        this->gamma = got->second;
+    } else {
+        throw std::runtime_error("Cannot find parameter gamma");
+    }
+
+    got = map.find("delta");
+    if(got != map.end()) {
+        this->delta = got->second;
+    } else {
+        throw std::runtime_error("Cannot find parameter delta");
+    }
+
+    std::vector<std::string> paramlist = {"alpha", "beta", "gamma", "delta"};
+    std::cout << "Succesfully loaded the following parameters" << std::endl;
+    for(const std::string& variable : paramlist) {
+        auto got = map.find(variable);
+        std::cout << "    " << variable << " = " << got->second << std::endl;
+    }
+}

@@ -88,6 +88,15 @@ public:
      */
     void write_state_to_file(const std::string& filename);
 
+    /**
+     * @brief      Sets the parameters.
+     *
+     * @param[in]  params  The parameters
+     */
+    inline void set_parameters(const std::string& params) {
+        this->reaction_system->set_parameters(params);
+    }
+
 private:
     /**
      * @brief      Initialize the system

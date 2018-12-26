@@ -19,6 +19,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <chrono>
 #include <tclap/CmdLine.h>
 
 #include "config.h"
@@ -26,6 +27,7 @@
 #include "reaction_fitzhugh_nagumo.h"
 #include "reaction_gray_scott.h"
 #include "reaction_lotka_volterra.h"
+#include "reaction_gierer_meinhardt.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -40,7 +42,9 @@ int main(int argc, char* argv[]) {
         TCLAP::ValueArg<int> arg_height("","height","height of the system", true, 100, "int");
         TCLAP::ValueArg<int> arg_steps("","steps","number of steps to integrate", true, 150, "int");
         TCLAP::ValueArg<int> arg_tsteps("","tsteps","number of steps when output should be written", true, 100, "int");
-        TCLAP::ValueArg<std::string> arg_outfile("","outfile","file to write output to", true, "results.dat", "int");
+        TCLAP::ValueArg<std::string> arg_outfile("","outfile","file to write output to", true, "results.dat", "string");
+        TCLAP::ValueArg<std::string> arg_reaction("","reaction","which reaction system to employ", true, "lotka-volterra", "string");
+        TCLAP::ValueArg<std::string> arg_params("","parameters","model parameters to use", true, "alpha=1;beta=2;gamma=3;delta=4", "string");
 
         cmd.add(arg_da);
         cmd.add(arg_db);
@@ -51,6 +55,8 @@ int main(int argc, char* argv[]) {
         cmd.add(arg_steps);
         cmd.add(arg_tsteps);
         cmd.add(arg_outfile);
+        cmd.add(arg_reaction);
+        cmd.add(arg_params);
 
         cmd.parse(argc, argv);
 
@@ -64,15 +70,55 @@ int main(int argc, char* argv[]) {
         const unsigned int steps = arg_steps.getValue();
         const unsigned int tsteps = arg_tsteps.getValue();
 
-        const std::string& outfile = arg_outfile.getValue();
+        const std::string outfile = arg_outfile.getValue();
+        const std::string reaction = arg_reaction.getValue();
+        const std::string params = arg_params.getValue();
+
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "Starting program: Turing version " << PROGRAM_VERSION << std::endl;
+        std::cout << "Author: Ivo Filot <ivo@ivofilot.nl>" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
 
         // construct object and perform time-integration
+        auto start = std::chrono::system_clock::now();
         TwoDimRD tdrd(Da, Db, width, height, dx, dt, steps, tsteps);
-        tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionLotkaVolterra()));
+
+        // choose which reaction model
+        if(reaction == "lotka-volterra") {
+            std::cout << "Loading reaction model: Lotka-Volterra" << std::endl;
+            tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionLotkaVolterra()));
+        } else if(reaction == "gierer-meinhardt") {
+            std::cout << "Loading reaction model: Gierer-Meinhardt" << std::endl;
+            tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionGiererMeinhardt()));
+        } else if(reaction == "gray-scott") {
+            std::cout << "Loading reaction model: Gray-Scott" << std::endl;
+            tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionGrayScott()));
+        } else if(reaction == "fitzhugh-nagumo") {
+            std::cout << "Loading reaction model: Fitzhugh-Nagumo" << std::endl;
+            tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionFitzhughNagumo()));
+        } else {
+            std::cout << "Invalid reaction encountered, please choose one among the following:" << std::endl;
+            std::cout << "    Gierer-Meinhardt" << std::endl;
+            std::cout << "    Lotka-Volterra" << std::endl;
+            std::cout << "    Gray-Scott" << std::endl;
+            std::cout << "    Fitzhugh-Nagumo" << std::endl;
+        }
+
+        // set parameters
+        tdrd.set_parameters(params);
+
+        // perform time integration
+        std::cout << "Start time integration: " << steps*tsteps << " steps of dt = " << dt << std::endl;
         tdrd.time_integrate();
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end-start;
+        std::cout << "Performed time integration in " << elapsed_seconds.count() << " seconds." << std::endl;
 
         // write result to file
+        std::cout << "Writing " << steps << " frames to " << outfile << "." << std::endl;
         tdrd.write_state_to_file(outfile);
+
+        std::cout << "Done execution" << std::endl << std::endl;
 
         return 0;
 
