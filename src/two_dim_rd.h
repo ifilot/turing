@@ -27,6 +27,8 @@ typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> MatrixXXd;
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <vector>
+#include <boost/progress.hpp>
 
 #include "reaction_system.h"
 

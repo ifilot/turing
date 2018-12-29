@@ -65,6 +65,7 @@ pkg_check_modules(EIGEN eigen3 REQUIRED)
 
 # Set include folders
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
+                    ${CMAKE_CURRENT_SOURCE_DIR}/../vendor/
                     ${CMAKE_BINARY_DIR}
                     ${TCLAP_INCLUDE_DIRS}
                     ${EIGEN_INCLUDE_DIRS}
