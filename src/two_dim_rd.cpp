@@ -60,16 +60,17 @@ void TwoDimRD::set_reaction(ReactionSystem* _reaction_system) {
 void TwoDimRD::time_integrate() {
     this->t = 0;
 
-    boost::progress_display show_progress(this->steps);
-
-    for(unsigned int i=0; i<this->steps; i++) {
+    for(int i : tq::trange(this->steps)) {
         for(unsigned int j=0; j<this->tsteps; j++) {
             this->update();
         }
-        ++show_progress;
+
         this->ta.push_back(this->a);
         this->tb.push_back(this->b);
     }
+
+    // give newline after tqdm progress bar
+    std::cout << std::endl;
 }
 
 /**

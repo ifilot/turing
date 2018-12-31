@@ -28,9 +28,9 @@ typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> MatrixXXd;
 #include <fstream>
 #include <memory>
 #include <vector>
-#include <boost/progress.hpp>
 
 #include "reaction_system.h"
+#include "tqdm.hpp"
 
 class TwoDimRD {
 private:
