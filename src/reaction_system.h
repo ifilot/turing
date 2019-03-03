@@ -71,10 +71,13 @@ protected:
     /**
      * @brief      random initialization
      *
-     * @param      a     Concentration matrix A
-     * @param      b     Concentration matrix B
+     * @param      a      Concentration matrix A
+     * @param      b      Concentration matrix B
+     * @param[in]  ca     central value for A
+     * @param[in]  cb     central value for B
+     * @param[in]  delta  random deviation delta
      */
-    void init_random(MatrixXXd& a, MatrixXXd& b) const;
+    void init_random(MatrixXXd& a, MatrixXXd& b, double ca = 0.0, double cb = 0.0, double delta = 1.0) const;
 
     /**
      * @brief      Make a single sphere in the center of the system
@@ -85,6 +88,16 @@ protected:
      * @param[in]  cb    concentration of B in center
      */
     void init_central_circle(MatrixXXd& a, MatrixXXd& b, double ca, double cb) const;
+
+    /**
+     * @brief      Make a two spheres in the center of the system
+     *
+     * @param      a     Concentration matrix A
+     * @param      b     Concentration matrix B
+     * @param[in]  ca    concentration of A in center
+     * @param[in]  cb    concentration of B in center
+     */
+    void init_dual_central_circle(MatrixXXd& a, MatrixXXd& b, double ca, double cb) const;
 
     /**
      * @brief      Set random rectangles as initial value

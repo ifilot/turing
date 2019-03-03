@@ -34,7 +34,7 @@ ReactionSystem::ReactionSystem() {
  * @param      a     Concentration matrix A
  * @param      b     Concentration matrix B
  */
-void ReactionSystem::init_random(MatrixXXd& a, MatrixXXd& b) const {
+void ReactionSystem::init_random(MatrixXXd& a, MatrixXXd& b, double ca, double cb, double delta) const {
     unsigned int width = a.cols();
     unsigned int height = a.rows();
 
@@ -43,8 +43,8 @@ void ReactionSystem::init_random(MatrixXXd& a, MatrixXXd& b) const {
 
     for(unsigned int i=0; i<height; i++) {
         for(unsigned int j=0; j<width; j++) {
-            a(i,j) = this->uniform_dist();
-            b(i,j) = this->uniform_dist();
+            a(i,j) = ca + this->uniform_dist() * delta;
+            b(i,j) = cb + this->uniform_dist() * delta;
         }
     }
 }
@@ -66,9 +66,53 @@ void ReactionSystem::init_central_circle(MatrixXXd& a, MatrixXXd& b, double ca, 
 
     for(unsigned int i=0; i<height; i++) {
         for(unsigned int j=0; j<width; j++) {
-            double r = (double)width / 8.0;
+            double r = (double)width / 16.0;
             double r2 = r * r;
             double dx = (double)(width) / 2.0 - (double)j;
+            double dy = (double)(height) / 2.0 - (double)i;
+            if( (dx * dx + dy * dy) < r2) {
+                a(i,j) = ca;
+                b(i,j) = cb;
+            }
+        }
+    }
+}
+
+/**
+ * @brief      Make a two spheres in the center of the system
+ *
+ * @param      a     Concentration matrix A
+ * @param      b     Concentration matrix B
+ * @param[in]  ca    concentration of A in center
+ * @param[in]  cb    concentration of B in center
+ */
+void ReactionSystem::init_dual_central_circle(MatrixXXd& a, MatrixXXd& b, double ca, double cb) const {
+    unsigned int width = a.cols();
+    unsigned int height = a.rows();
+
+    a = MatrixXXd::Zero(height, width);
+    b = MatrixXXd::Zero(height, width);
+
+    // make upper circle
+    for(unsigned int i=0; i<height; i++) {
+        for(unsigned int j=0; j<width; j++) {
+            double r = (double)width / 32.0;
+            double r2 = r * r;
+            double dx = (double)(width) / 2.0 - (double)(j - height / 4);
+            double dy = (double)(height) / 2.0 - (double)i;
+            if( (dx * dx + dy * dy) < r2) {
+                a(i,j) = ca;
+                b(i,j) = cb;
+            }
+        }
+    }
+
+    // make lower circle
+    for(unsigned int i=0; i<height; i++) {
+        for(unsigned int j=0; j<width; j++) {
+            double r = (double)width / 32.0;
+            double r2 = r * r;
+            double dx = (double)(width) / 2.0 - (double)(j + height / 4);
             double dy = (double)(height) / 2.0 - (double)i;
             if( (dx * dx + dy * dy) < r2) {
                 a(i,j) = ca;

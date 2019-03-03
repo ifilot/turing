@@ -71,7 +71,17 @@ Gray-Scott converges to a **steady-state solution**.
 
 ![Gray-Scott reaction-diffusion system](img/gray-scott.gif "Gray-Scott reaction-diffusion system")
 
-### Gierer-Meinhardt
+### Brusselator
+Example execution:
+```
+../build/turing --Da 2 --Db 16 --dx 1.0 --dt 0.001 --width 100 --height 100 \
+--steps 100 --tsteps 1000 --outfile "data.bin" --reaction brusselator \
+--parameters "alpha=4.5;beta=7.50"
+```
+
+Brusselator converges to a **steady-state solution**.
+
+![Brusselator reaction-diffusion system](img/brusselator.gif "Brusselator reaction-diffusion system")
 
 ## Compilation
 ```

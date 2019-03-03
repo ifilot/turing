@@ -97,6 +97,7 @@ public:
      */
     inline void set_parameters(const std::string& params) {
         this->reaction_system->set_parameters(params);
+        this->init();
     }
 
 private:

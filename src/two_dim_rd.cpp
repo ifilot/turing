@@ -51,7 +51,6 @@ TwoDimRD::TwoDimRD(double _Da, double _Db,
 
 void TwoDimRD::set_reaction(ReactionSystem* _reaction_system) {
     this->reaction_system = std::unique_ptr<ReactionSystem>(_reaction_system);
-    this->init();
 }
 
 /**

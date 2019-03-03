@@ -28,6 +28,7 @@
 #include "reaction_gray_scott.h"
 #include "reaction_lotka_volterra.h"
 #include "reaction_gierer_meinhardt.h"
+#include "reaction_brusselator.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -96,12 +97,16 @@ int main(int argc, char* argv[]) {
         } else if(reaction == "fitzhugh-nagumo") {
             std::cout << "Loading reaction model: Fitzhugh-Nagumo" << std::endl;
             tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionFitzhughNagumo()));
+        } else if(reaction == "brusselator") {
+            std::cout << "Loading reaction model: Brusselator" << std::endl;
+            tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionBrusselator()));
         } else {
             std::cout << "Invalid reaction encountered, please choose one among the following:" << std::endl;
             std::cout << "    gierer-meinhardt" << std::endl;
             std::cout << "    lotka-volterra" << std::endl;
             std::cout << "    gray-scott" << std::endl;
             std::cout << "    fitzhugh-nagumo" << std::endl;
+            std::cout << "    brusselator" << std::endl;
             std::cout << "Note that the input is case-sensitive." << std::endl;
         }
 
