@@ -19,36 +19,19 @@
  *                                                                        *
  **************************************************************************/
 
-#include "reaction_lotka_volterra.h"
+#include "reaction_barkley.h"
 
-/**
- * @brief      Constructs the object.
- */
-ReactionLotkaVolterra::ReactionLotkaVolterra() {
+ReactionBarkley::ReactionBarkley() {
 
 }
 
-/**
- * @brief      Perform a reaction step
- *
- * @param[in]  a     Concentration matrix A
- * @param[in]  b     Concentration matrix B
- * @param      ra    Pointer to reaction term for A
- * @param      rb    Pointer to reaction term for B
- */
-void ReactionLotkaVolterra::reaction(double a, double b, double *ra, double *rb) const {
-    *ra = this->alpha * a - this->beta * a * b;
-    *rb = this->delta * a * b - this->gamma * b;
+void ReactionBarkley::init(MatrixXXd& a, MatrixXXd& b) const {
+    this->init_half_screen(a, b, 1.0, this->alpha / 2.0);
 }
 
-/**
- * @brief      Initialize the system
- *
- * @param      a     Concentration matrix A
- * @param      b     Concentration matrix B
- */
-void ReactionLotkaVolterra::init(MatrixXXd& a, MatrixXXd& b) const {
-    this->init_dual_central_circle(a, b, 1.0, 1.0);
+void ReactionBarkley::reaction(double a, double b, double *ra, double *rb) const {
+    *ra = epsilon * a * (1.0 - a) * (a - (b + this->beta)/this->alpha);
+    *rb = a*a*a - b;
 }
 
 /**
@@ -56,7 +39,7 @@ void ReactionLotkaVolterra::init(MatrixXXd& a, MatrixXXd& b) const {
  *
  * @param[in]  params  The parameters
  */
-void ReactionLotkaVolterra::set_parameters(const std::string& params) {
+void ReactionBarkley::set_parameters(const std::string& params) {
     auto map = this->parse_parameters(params);
 
     auto got = map.find("alpha");
@@ -73,24 +56,22 @@ void ReactionLotkaVolterra::set_parameters(const std::string& params) {
         throw std::runtime_error("Cannot find parameter beta");
     }
 
-    got = map.find("gamma");
+    got = map.find("epsilon");
     if(got != map.end()) {
-        this->gamma = got->second;
+        this->epsilon = got->second;
     } else {
-        throw std::runtime_error("Cannot find parameter gamma");
+        throw std::runtime_error("Cannot find parameter epsilon");
     }
 
-    got = map.find("delta");
-    if(got != map.end()) {
-        this->delta = got->second;
-    } else {
-        throw std::runtime_error("Cannot find parameter delta");
-    }
-
-    std::vector<std::string> paramlist = {"alpha", "beta", "gamma", "delta"};
+    std::vector<std::string> paramlist = {"alpha", "beta", "epsilon"};
     std::cout << "Succesfully loaded the following parameters" << std::endl;
     for(const std::string& variable : paramlist) {
-        auto got = map.find(variable);
-        std::cout << "    " << variable << " = " << got->second << std::endl;
+        try {
+            auto got = map.find(variable);
+            std::cout << "    " << variable << " = " << got->second << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "Found error: " << e.what() << std::endl;
+        }
+
     }
 }

@@ -21,6 +21,7 @@
 
 #include <chrono>
 #include <tclap/CmdLine.h>
+#include <omp.h>
 
 #include "config.h"
 #include "two_dim_rd.h"
@@ -29,6 +30,7 @@
 #include "reaction_lotka_volterra.h"
 #include "reaction_gierer_meinhardt.h"
 #include "reaction_brusselator.h"
+#include "reaction_barkley.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -46,6 +48,7 @@ int main(int argc, char* argv[]) {
         TCLAP::ValueArg<std::string> arg_outfile("","outfile","file to write output to", true, "results.dat", "string");
         TCLAP::ValueArg<std::string> arg_reaction("","reaction","which reaction system to employ", true, "lotka-volterra", "string");
         TCLAP::ValueArg<std::string> arg_params("","parameters","model parameters to use", true, "alpha=1;beta=2;gamma=3;delta=4", "string");
+        TCLAP::SwitchArg arg_pbc("", "pbc", "periodic boundary conditions", false);
 
         cmd.add(arg_da);
         cmd.add(arg_db);
@@ -58,6 +61,7 @@ int main(int argc, char* argv[]) {
         cmd.add(arg_outfile);
         cmd.add(arg_reaction);
         cmd.add(arg_params);
+        cmd.add(arg_pbc);
 
         cmd.parse(argc, argv);
 
@@ -100,6 +104,9 @@ int main(int argc, char* argv[]) {
         } else if(reaction == "brusselator") {
             std::cout << "Loading reaction model: Brusselator" << std::endl;
             tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionBrusselator()));
+        } else if(reaction == "barkley") {
+            std::cout << "Loading reaction model: Barkley" << std::endl;
+            tdrd.set_reaction(dynamic_cast<ReactionSystem*>(new ReactionBarkley()));
         } else {
             std::cout << "Invalid reaction encountered, please choose one among the following:" << std::endl;
             std::cout << "    gierer-meinhardt" << std::endl;
@@ -107,11 +114,21 @@ int main(int argc, char* argv[]) {
             std::cout << "    gray-scott" << std::endl;
             std::cout << "    fitzhugh-nagumo" << std::endl;
             std::cout << "    brusselator" << std::endl;
+            std::cout << "    barkley" << std::endl;
             std::cout << "Note that the input is case-sensitive." << std::endl;
         }
 
+        if(arg_pbc.getValue()) {
+            std::cout << "Enabling periodic boundary conditions." << std::endl;
+        } else {
+            std::cout << "Using zero-flux boundary conditions." << std::endl;
+        }
+
+        std::cout << "Executing using " << omp_get_max_threads() << " threads." << std::endl;
+
         // set parameters
         tdrd.set_parameters(params);
+        tdrd.set_pbc(arg_pbc.getValue());
 
         // perform time integration
         std::cout << "Start time integration: " << steps*tsteps << " steps of dt = " << dt << std::endl;

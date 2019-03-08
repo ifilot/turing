@@ -152,6 +152,34 @@ void ReactionSystem::init_random_rectangles(MatrixXXd& a, MatrixXXd& b) const {
 }
 
 /**
+ * @brief      Make a half screen filling
+ *
+ * @param      a     Concentration matrix A
+ * @param      b     Concentration matrix B
+ * @param[in]  ca    concentration of A in center
+ * @param[in]  cb    concentration of B in center
+ */
+void ReactionSystem::init_half_screen(MatrixXXd& a, MatrixXXd& b, double ca, double cb) const {
+    unsigned int width = a.cols();
+    unsigned int height = a.rows();
+
+    a = MatrixXXd::Zero(height, width);
+    b = MatrixXXd::Zero(height, width);
+
+    for(unsigned int i=height/2; i<height; i++) {
+        for(unsigned int j=0; j<width; j++) {
+            a(i,j) = ca;
+        }
+    }
+
+    for(unsigned int i=0; i<height; i++) {
+        for(unsigned int j=0; j<width/2; j++) {
+            b(i,j) = cb;
+        }
+    }
+}
+
+/**
  * @brief      Parse parameters
  *
  * @param[in]  params  string containing list of parameters

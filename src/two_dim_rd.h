@@ -55,9 +55,11 @@ private:
     std::vector<MatrixXXd> ta;  //!< matrix to hold temporal data
     std::vector<MatrixXXd> tb;  //!< matrix to hold temporal data
 
-    double t;
+    double t;   //!< Total time t
 
-    std::unique_ptr<ReactionSystem> reaction_system;
+    std::unique_ptr<ReactionSystem> reaction_system;    //!< Pointer to reaction system
+
+    bool pbc = true;    //!< Whether to employ periodic boundary conditions
 
 public:
     /**
@@ -76,7 +78,21 @@ public:
              unsigned int _width, unsigned int _height,
              double _dx, double _dt, unsigned int _steps, unsigned int _tsteps);
 
+    /**
+     * @brief      Sets the reaction.
+     *
+     * @param      _reaction_system  The reaction system
+     */
     void set_reaction(ReactionSystem* _reaction_system);
+
+    /**
+     * @brief      Set whether system has periodic boundary conditions
+     *
+     * @param[in]  _pbc  Periodic boundary conditions
+     */
+    inline void set_pbc(bool _pbc) {
+        this->pbc = _pbc;
+    }
 
     /**
      * @brief      Perform time integration
@@ -112,14 +128,24 @@ private:
     void update();
 
     /**
-     * @brief      Calculate Laplacian using central finite difference
+     * @brief      Calculate Laplacian using central finite difference with periodic boundary conditions
      *
      * @param      delta_c  Concentration update matrix
      * @param      c        Current concentration matrix
      *
      * Note that this overwrites the current delta matrices!
      */
-    void laplacian_2d(MatrixXXd& delta_c, MatrixXXd& c);
+    void laplacian_2d_pbc(MatrixXXd& delta_c, MatrixXXd& c);
+
+    /**
+     * @brief      Calculate Laplacian using central finite difference with zero-flux boundaries
+     *
+     * @param      delta_c  Concentration update matrix
+     * @param      c        Current concentration matrix
+     *
+     * Note that this overwrites the current delta matrices!
+     */
+    void laplacian_2d_zeroflux(MatrixXXd& delta_c, MatrixXXd& c);
 
     /**
      * @brief      Calculate reaction term

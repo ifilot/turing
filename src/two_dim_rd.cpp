@@ -131,8 +131,13 @@ void TwoDimRD::init() {
  */
 void TwoDimRD::update() {
     // calculate laplacian
-    this->laplacian_2d(this->delta_a, this->a);
-    this->laplacian_2d(this->delta_b, this->b);
+    if(this->pbc) {
+        this->laplacian_2d_pbc(this->delta_a, this->a);
+        this->laplacian_2d_pbc(this->delta_b, this->b);
+    } else {
+        this->laplacian_2d_zeroflux(this->delta_a, this->a);
+        this->laplacian_2d_zeroflux(this->delta_b, this->b);
+    }
 
     // multiply with diffusion coefficient
     this->delta_a *= this->Da;
@@ -154,14 +159,14 @@ void TwoDimRD::update() {
 }
 
 /**
- * @brief      Calculate Laplacian using central finite difference
+ * @brief      Calculate Laplacian using central finite difference with periodic boundary conditions
  *
  * @param      delta_c  Concentration update matrix
  * @param      c        Current concentration matrix
  *
  * Note that this overwrites the current delta matrices!
  */
-void TwoDimRD::laplacian_2d(MatrixXXd& delta_c, MatrixXXd& c) {
+void TwoDimRD::laplacian_2d_pbc(MatrixXXd& delta_c, MatrixXXd& c) {
     const double idx2 = 1.0 / (this->dx * this->dx);
 
     #pragma omp parallel for schedule(static)
@@ -204,6 +209,49 @@ void TwoDimRD::laplacian_2d(MatrixXXd& delta_c, MatrixXXd& c) {
                                  + c(i2, j)
                                  + c(i, j1)
                                  + c(i, j2) ) * idx2;
+        }
+    }
+}
+
+/**
+ * @brief      Calculate Laplacian using central finite difference with zero-flux boundaries
+ *
+ * @param      delta_c  Concentration update matrix
+ * @param      c        Current concentration matrix
+ *
+ * Note that this overwrites the current delta matrices!
+ */
+void TwoDimRD::laplacian_2d_zeroflux(MatrixXXd& delta_c, MatrixXXd& c) {
+    unsigned int height = c.rows();
+    unsigned int width = c.cols();
+
+    const double idx2 = 1.0 / (dx * dx);
+
+    #pragma omp parallel for
+    for(unsigned int i=0; i<height; i++) {
+        for(unsigned int j=0; j<width; j++) {
+
+            double ddx = 0;
+            double ddy = 0;
+
+            if(i == 0) {
+                ddx = c(i+1,j) - c(i, j);
+            } else if(i == (height - 1)) {
+                ddx = c(i-1,j) - c(i, j);
+            } else {
+                ddx = (-2.0 * c(i,j) + c(i-1,j) + c(i+1,j));
+            }
+
+            if(j == 0) {
+                ddy = c(i,j+1) - c(i, j);
+            } else if(j == (width - 1)) {
+                ddy = c(i,j-1) - c(i, j);
+            } else {
+                ddy = (-2.0 * c(i,j) + c(i,j-1) + c(i,j+1));
+            }
+
+            // calculate laplacian
+            delta_c(i,j) = (ddx + ddy) * idx2;
         }
     }
 }

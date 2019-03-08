@@ -108,6 +108,16 @@ protected:
     void init_random_rectangles(MatrixXXd& a, MatrixXXd& b) const;
 
     /**
+     * @brief      Make a half screen filling
+     *
+     * @param      a     Concentration matrix A
+     * @param      b     Concentration matrix B
+     * @param[in]  ca    concentration of A in center
+     * @param[in]  cb    concentration of B in center
+     */
+    void init_half_screen(MatrixXXd& a, MatrixXXd& b, double ca, double cb) const;
+
+    /**
      * @brief      provide normal distribution
      *
      * @param[in]  dummy  A dummy variable, does nothing but required for function pointer

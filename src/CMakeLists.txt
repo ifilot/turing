@@ -28,7 +28,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules )
 
 # prepare configuration file
 SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "4")
+SET(VERSION_MINOR "5")
 SET(VERSION_MICRO "0")
 configure_file(config.h.in ../src/config.h @ONLY)
 
@@ -76,7 +76,7 @@ file(GLOB_RECURSE SOURCES "*.cpp")
 add_executable(turing ${SOURCES})
 
 # Set C++17
-add_definitions(-std=c++17)
+add_definitions(-std=c++17 -march=native)
 
 # Link libraries
 target_link_libraries(turing ${Boost_LIBRARIES})
