@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 import sys
 
 # set boundaries for cmap
-vmin1 = sys.argv[2]
-vmax1 = sys.argv[3]
-vmin2 = sys.argv[4]
-vmax2 = sys.argv[5]
+vmin1 = float(sys.argv[2])
+vmax1 = float(sys.argv[3])
+vmin2 = float(sys.argv[4])
+vmax2 = float(sys.argv[5])
 
 with open(sys.argv[1], "rb") as f:
     width = struct.unpack('i', f.read(4))[0]
