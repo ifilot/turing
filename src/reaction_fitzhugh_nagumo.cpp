@@ -26,7 +26,7 @@ ReactionFitzhughNagumo::ReactionFitzhughNagumo() {
 }
 
 void ReactionFitzhughNagumo::init(MatrixXXd& a, MatrixXXd& b) const {
-    this->init_random(a, b);
+    this->init_half_screen(a, b, 1.0, 0.1);
 }
 
 void ReactionFitzhughNagumo::reaction(double a, double b, double *ra, double *rb) const {
